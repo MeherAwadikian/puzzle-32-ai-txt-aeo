@@ -13,10 +13,13 @@ with the real page content, which is the actual point of an AEO/`llms.txt`
   rendered to HTML via `marked`.
 - `GET /ai.txt` — the exact same markdown strings, concatenated with a short
   llms.txt-style header, served as `text/markdown`.
+- `GET /sitemap.xml`, `GET /robots.txt` — generated from the same `pages`
+  array, added so this site could genuinely be submitted to Google Search
+  Console (see below — that's puzzle #33 in the same tracker).
 
 ## Verified, not assumed
 
-1. Ran the Worker locally (`wrangler dev`) and curled all 4 routes — correct
+1. Ran the Worker locally (`wrangler dev`) and curled all routes — correct
    200s, correct `Content-Type: text/markdown` on `/ai.txt`, correct 404 on
    an unknown path.
 2. **Programmatic proof of the single-source-of-truth claim**: a short Node
@@ -34,5 +37,21 @@ with the real page content, which is the actual point of an AEO/`llms.txt`
    deploy (not just local dev), and visually confirmed the rendered
    homepage via claude-in-chrome.
 
+## Added to Google Search Console (puzzle #33)
+
+Using the existing `aiology7914@gmail.com` GSC account (already set up for a
+different property per prior session memory), added this site as a real new
+URL-prefix property:
+1. **Ownership verified live** via the HTML-tag method — added the exact
+   `<meta name="google-site-verification" ...>` tag GSC generated into the
+   Worker's `<head>`, redeployed, confirmed the tag was actually live via
+   `curl` before clicking Verify in the GSC UI. Result: "Ownership verified."
+2. **Sitemap submitted**: `/sitemap.xml` (generated from the same `pages`
+   source, so it can't drift from the real routes) submitted via the GSC
+   Sitemaps page — "Sitemap submitted successfully." Status shows "Couldn't
+   fetch" initially, which is expected until Google's next crawl pass (same
+   behavior seen on a prior real GSC setup for a different site, not a bug).
+
 Live: https://puzzle-32-ai-txt-aeo.krikormher.workers.dev
 AI-readable version: https://puzzle-32-ai-txt-aeo.krikormher.workers.dev/ai.txt
+Sitemap: https://puzzle-32-ai-txt-aeo.krikormher.workers.dev/sitemap.xml
